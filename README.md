@@ -28,15 +28,10 @@ What you'll gain by completing this SQL project:
 - **Project Documentation**: Produced comprehensive documentation including database schema, sample data, and query examples.
 
 ## Repository Structure
-BookStore-Database
-├── sql/
-│   ├── schema.sql        # Complete database schema
-│   ├── sample_data.sql   # Sample data insertions
-│   ├── users.sql         # User management SQL
-│   └── queries.sql       # Sample queries
-├── docs/
-│   └── ERD.drawio        # Database diagram
-└── README.md             # Project documentation
+BookStore-Database/
+├── schema.sql      # Complete database schema
+├── ERD.drawio      # Database diagram 
+└── README.md       # Project documentation
 
 ## How to Contribute
 1. Fork the repository
