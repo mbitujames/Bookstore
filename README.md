@@ -41,6 +41,6 @@ BookStore-Database/
 5. Open a pull request
    
 ## Team Members
-- Mbitu James -Group Leader
-- Rachel Ruguru
-- Cynthia Kimani
+- @mbitujames - Mbitu James -Group Leader
+- @Rakeel08 - Rachel Ruguru
+- @TechLeon001 - Cynthia Kimani

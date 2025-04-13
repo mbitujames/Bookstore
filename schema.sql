@@ -1,10 +1,8 @@
--- This SQL script contains codes to create the database and all the tables for the bookstore
+-- This SQL script contains codes for creating all the tables and populating the bookstore database 
 
--- SECTION 1: RACHEL RUGURU SQL CODES
+                         -- SECTION 1: RACHEL RUGURU SQL CODES
+
 --CODES FOR CREATING THE TABLES
---CODES FOR INSERTING THE DATA INTO THE TABLES
---CODES FOR CREATING A USER
-
 -- creating the database
 CREATE DATABASE bookstore;
 USE bookstore;
@@ -64,6 +62,8 @@ INSERT INTO book_language (language_name, language_code) VALUES
 ('Arabic', 'ar'),
 ('Chinese', 'zh'),
 ('Japanese', 'ja');
+
+--CODES FOR INSERTING THE DATA INTO THE TABLES
 
 -- inserting into publisher table
 INSERT INTO publisher (publisher_name, publisher_website) VALUES 
@@ -164,13 +164,15 @@ INSERT INTO author (author_name, author_bio, birth_date) VALUES
 ('Naguib Mahfouz', 'Egyptian writer who won the 1988 Nobel Prize in Literature', '1911-12-11'),
 ('Petina Gappah', 'Zimbabwean lawyer and writer of fiction, essays and opinion pieces', '1971-01-01');
 
+--CODES FOR CREATING A USER
 -- Creating user with limited privileges
 CREATE USER 'bookstore_app'@'localhost' IDENTIFIED BY 'Password456!';
 GRANT SELECT, INSERT, UPDATE, DELETE ON bookstore.* TO 'bookstore_app'@'localhost';
 
 
 
--- SECTION 2: JAMES MBITU SQL CODES
+                                -- SECTION 2: JAMES MBITU SQL CODES
+
 --CODES FOR CREATING THE TABLES
 
 -- creating Country table
@@ -315,13 +317,58 @@ CREATE USER 'bookstore_admin'@'localhost' IDENTIFIED BY 'Password123!';
 GRANT ALL PRIVILEGES ON BookStore.* TO 'bookstore_admin'@'localhost';
 
 
--- SECTION 3: CYNTHIA KIMANI SQL CODES
+                        -- SECTION 3: CYNTHIA KIMANI SQL CODES
+                        
 --CODES FOR CREATING THE TABLES
+-- creating Order status table
+CREATE TABLE order_status (
+    status_id INT PRIMARY KEY AUTO_INCREMENT,
+    status_name VARCHAR(50) NOT NULL
+);
+
+-- creating Shipping method table
+CREATE TABLE shipping_method (
+    method_id INT PRIMARY KEY AUTO_INCREMENT,
+    method_name VARCHAR(50) NOT NULL,
+    cost DECIMAL(10,2) NOT NULL
+);
+
+-- creating Customer order table
+CREATE TABLE cust_order (
+    order_id INT PRIMARY KEY AUTO_INCREMENT,
+    customer_id INT NOT NULL,
+    order_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+    shipping_method_id INT NOT NULL,
+    address_id INT NOT NULL,
+    FOREIGN KEY (customer_id) REFERENCES customer(customer_id),
+    FOREIGN KEY (shipping_method_id) REFERENCES shipping_method(method_id),
+    FOREIGN KEY (address_id) REFERENCES address(address_id)
+);
+
+-- creating Order line table
+CREATE TABLE order_line (
+    line_id INT PRIMARY KEY AUTO_INCREMENT,
+    order_id INT NOT NULL,
+    book_id INT NOT NULL,
+    quantity INT NOT NULL,
+    price DECIMAL(10,2) NOT NULL,
+    FOREIGN KEY (order_id) REFERENCES cust_order(order_id),
+    FOREIGN KEY (book_id) REFERENCES book(book_id)
+);
+
+-- creating Order history table
+CREATE TABLE order_history (
+    history_id INT PRIMARY KEY AUTO_INCREMENT,
+    order_id INT NOT NULL,
+    status_id INT NOT NULL,
+    status_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (order_id) REFERENCES cust_order(order_id),
+    FOREIGN KEY (status_id) REFERENCES order_status(status_id)
+);
 
 --CODES FOR INSERTING THE DATA INTO THE TABLES
 
---CODES FOR CREATING A USER
-inserting into shipping method
+--inserting into shipping method
 INSERT INTO shipping_method (method_name, cost) VALUES 
 ('Standard Shipping', 1000),
 ('Express Shipping', 2000),
@@ -405,3 +452,8 @@ INSERT INTO order_history (order_id, status_id, status_date) VALUES
 (18, 1, '2025-04-05 14:00:00'), (18, 2, '2025-04-05 15:00:00'), (18, 3, '2025-04-06 12:00:00'), (18, 4, '2025-04-08 17:00:00'),
 (19, 1, '2025-04-09 15:15:00'), (19, 2, '2025-04-09 16:15:00'), (19, 3, '2025-04-10 13:00:00'), (19, 4, '2025-04-12 18:00:00'),
 (20, 1, '2025-04-10 16:30:00'), (20, 2, '2025-04-10 17:30:00'), (20, 3, '2025-04-11 14:00:00'), (20, 4, '2025-04-13 19:00:00');
+
+--CODES FOR CREATING A USER
+-- Creating read-only user for reports
+CREATE USER 'bookstore_report'@'localhost' IDENTIFIED BY 'Password789!';
+GRANT SELECT ON BookStore.* TO 'bookstore_report'@'localhost';
