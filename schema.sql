@@ -2,10 +2,171 @@
 
 -- SECTION 1: RACHEL RUGURU SQL CODES
 --CODES FOR CREATING THE TABLES
-
 --CODES FOR INSERTING THE DATA INTO THE TABLES
-
 --CODES FOR CREATING A USER
+
+-- creating the database
+CREATE DATABASE bookstore;
+USE bookstore;
+
+-- creating Language table
+CREATE TABLE book_language (
+    language_id INT PRIMARY KEY AUTO_INCREMENT,
+    language_name VARCHAR(50) NOT NULL,
+    language_code VARCHAR(10) NOT NULL
+);
+
+-- creating Publisher table
+CREATE TABLE publisher (
+    publisher_id INT PRIMARY KEY AUTO_INCREMENT,
+    publisher_name VARCHAR(100) NOT NULL,
+    publisher_website VARCHAR(255)
+);
+
+-- creating Author table
+CREATE TABLE author (
+    author_id INT PRIMARY KEY AUTO_INCREMENT,
+    author_name VARCHAR(100) NOT NULL,
+    author_bio TEXT,
+    birth_date DATE
+);
+
+-- creating Book table
+CREATE TABLE book (
+    book_id INT PRIMARY KEY AUTO_INCREMENT,
+    title VARCHAR(255) NOT NULL,
+    isbn VARCHAR(20) UNIQUE NOT NULL,
+    publication_year INT,
+    publisher_id INT,
+    language_id INT,
+    price DECIMAL(10,2) NOT NULL,
+    stock_quantity INT NOT NULL DEFAULT 0,
+    FOREIGN KEY (publisher_id) REFERENCES publisher(publisher_id),
+    FOREIGN KEY (language_id) REFERENCES book_language(language_id)
+);
+
+-- creating Book-Author relationship (many-to-many)
+CREATE TABLE book_author (
+    book_id INT NOT NULL,
+    author_id INT NOT NULL,
+    PRIMARY KEY (book_id, author_id),
+    FOREIGN KEY (book_id) REFERENCES book(book_id),
+    FOREIGN KEY (author_id) REFERENCES author(author_id)
+);
+
+-- inserting into book language table
+INSERT INTO book_language (language_name, language_code) VALUES 
+('English', 'en'),
+('Swahili', 'sw'),
+('French', 'fr'),
+('German', 'de'),
+('Spanish', 'es'),
+('Arabic', 'ar'),
+('Chinese', 'zh'),
+('Japanese', 'ja');
+
+-- inserting into publisher table
+INSERT INTO publisher (publisher_name, publisher_website) VALUES 
+('Penguin Random House', 'https://www.penguinrandomhouse.com'),
+('HarperCollins', 'https://www.harpercollins.com'),
+('Longhorn Publishers', 'https://www.longhornpublishers.com'),
+('Oxford University Press', 'https://global.oup.com'),
+('Mkuki na Nyota', 'https://www.mkukinanyota.com'),
+('Storymoja Africa', 'https://storymojaafrica.co.ke'),
+('Macmillan Publishers', 'https://www.macmillaneducation.com'),
+('Jomo Kenyatta Foundation', 'https://www.jkf.co.ke'),
+('East African Educational Publishers', 'https://www.eastafricanpublishers.com'),
+('Kwani Trust', 'https://www.kwani.org');
+
+-- inserting into books with different categories
+INSERT INTO book (title, isbn, publisher_id, language_id, price, stock_quantity, publication_year) VALUES
+-- english books
+-- Children's (5)
+('Harry Potter and the Philosopher''s Stone', '9780747532743', 1, 1, 12.99, 50, 1997),
+('Charlie and the Chocolate Factory', '9780142410318', 1, 1, 8.99, 40, 1964),
+('Matilda', '9780142410370', 1, 1, 7.99, 35, 1988),
+('The BFG', '9780142410387', 1, 1, 9.50, 30, 1982),
+('Tales of a Fourth Grade Nothing', '9780142401019', 1, 1, 6.99, 25, 1972),
+-- Adventure (5)
+('The Da Vinci Code', '9780307474278', 2, 1, 10.99, 45, 2003),
+('The Lost Symbol', '9780385504225', 2, 1, 11.50, 38, 2009),
+('Treasure Island', '9780141321004', 1, 1, 5.99, 28, 1883),
+('Jurassic Park', '9780345370778', 2, 1, 9.99, 32, 1990),
+('The Hobbit', '9780261102217', 4, 1, 12.50, 42, 1937),
+-- Horror (5)
+('The Shining', '9780307743657', 2, 1, 9.99, 30, 1977),
+('It', '9781501142970', 2, 1, 11.99, 35, 1986),
+('Goosebumps: Welcome to Dead House', '9780590453670', 2, 1, 6.50, 40, 1992),
+('Pet Sematary', '9781501156700', 2, 1, 10.50, 25, 1983),
+('Dracula', '9780141439846', 1, 1, 7.99, 20, 1897),
+-- Novels (5)
+('The Kite Runner', '9781594631931', 2, 1, 10.99, 40, 2003),
+('A Time to Kill', '9780385537148', 2, 1, 9.99, 35, 1989),
+('The Firm', '9780385537131', 2, 1, 8.99, 30, 1991),
+('The Alchemist', '9780062315007', 2, 1, 11.50, 45, 1988),
+('To Kill a Mockingbird', '9780061120084', 2, 1, 9.50, 38, 1960),
+-- Swahili Books (20)
+-- Children's (5)
+('Sungura na Simba', '9789966498181', 3, 2, 5.99, 40, 2005),
+('Hadithi za Kukupa Mafunzo', '9789966252401', 5, 2, 4.99, 35, 1998),
+('Mfalme Mwerevu', '9789966252418', 5, 2, 6.50, 30, 2001),
+('Nyani Mjanja', '9789966498198', 3, 2, 5.50, 25, 2007),
+('Kisa cha Mamba na Kiboko', '9789966252425', 5, 2, 4.50, 20, 2003),
+-- Adventure (5)
+('Kiu', '9789987081491', 5, 2, 8.99, 30, 1972),
+('Dunia Uwanja wa Fujo', '9789987081507', 5, 2, 9.50, 25, 1980),
+('Mstahiki Meya', '9789966252432', 5, 2, 7.99, 28, 1995),
+('Kilio cha Haki', '9789987081514', 5, 2, 8.50, 22, 2001),
+('Siri ya Mwalimu Mwafrika', '9789966252449', 5, 2, 9.99, 20, 2008),
+-- Horror (5)
+('Joka la Mtoni', '9789987081521', 5, 2, 10.50, 18, 1999),
+('Mzimu wa Wazimamoto', '9789966252456', 5, 2, 9.99, 15, 2005),
+('Kivuli cha Mauti', '9789987081538', 5, 2, 11.50, 12, 2010),
+('Shetani Msalabani', '9789966252463', 5, 2, 8.99, 20, 2003),
+('Mzimu wa Watu Wazima', '9789987081545', 5, 2, 10.99, 15, 2007),
+-- Novels (5)
+('Utengano', '9789987081552', 5, 2, 12.99, 25, 1980),
+('Kosa la Bwana Macha', '9789966252470', 5, 2, 11.50, 20, 1992),
+('Dunia Yao', '9789987081569', 5, 2, 10.99, 18, 2005),
+('Makuadi wa Soko Huria', '9789966252487', 5, 2, 9.99, 22, 2012),
+('Nafsi Yangu', '9789987081576', 5, 2, 8.50, 15, 2015);
+
+-- inserting into author table
+INSERT INTO author (author_name, author_bio, birth_date) VALUES 
+('J.K. Rowling', 'British author best known for the Harry Potter series', '1965-07-31'),
+('Stephen King', 'American author of horror, supernatural fiction, suspense, and fantasy novels', '1947-09-21'),
+('Ngũgĩ wa Thiong''o', 'Kenyan writer and academic who writes primarily in Gikuyu and English', '1938-01-05'),
+('Shaaban Robert', 'Tanzanian poet, author, and essayist who wrote in Swahili', '1909-01-01'),
+('Roald Dahl', 'British novelist, short-story writer, poet, screenwriter, and wartime fighter pilot', '1916-09-13'),
+('R.L. Stine', 'American novelist, short story writer, television producer, screenwriter, and executive editor', '1943-10-08'),
+('Khaled Hosseini', 'Afghan-American novelist, physician, activist, humanitarian, and UNHCR goodwill ambassador', '1965-03-04'),
+('Mukoma wa Ngugi', 'Kenyan author and assistant professor of English at Cornell University', '1971-01-01'),
+('Ken Walibora', 'Kenyan author, journalist, translator and scholar of Kiswahili literature', '1961-01-01'),
+('Enid Blyton', 'English children''s writer whose books have been among the world''s best-sellers since the 1930s', '1897-08-11'),
+('John Grisham', 'American novelist, attorney, politician, and activist best known for his popular legal thrillers', '1955-02-08'),
+('Barbara Kimenye', 'Ugandan children''s writer and columnist', '1929-01-01'),
+('Dan Brown', 'American author best known for his thriller novels including The Da Vinci Code', '1964-06-22'),
+('Euphrase Kezilahabi', 'Tanzanian novelist, poet, and scholar', '1944-04-13'),
+('Judy Blume', 'American writer known for children''s and young adult fiction', '1938-02-12'),
+('Shafi Adam Shafi', 'Tanzanian novelist and short story writer in Swahili', '1940-01-01'),
+('Chinua Achebe', 'Nigerian novelist, poet, professor, and critic', '1930-11-16'),
+('Wole Soyinka', 'Nigerian playwright, poet, and essayist in the English language', '1934-07-13'),
+('Nuruddin Farah', 'Somali novelist', '1945-11-24'),
+('Binyavanga Wainaina', 'Kenyan author, journalist and 2002 Caine Prize winner', '1971-01-18'),
+('Margaret Atwood', 'Canadian poet, novelist, literary critic, and environmental activist', '1939-11-18'),
+('Chimamanda Ngozi Adichie', 'Nigerian writer whose works range from novels to short stories to nonfiction', '1977-09-15'),
+('Toni Morrison', 'American novelist, essayist, editor, and professor who won the Nobel Prize in Literature', '1931-02-18'),
+('Meja Mwangi', 'Kenyan novelist known for works about urban life and social issues', '1948-12-25'),
+('Okot p''Bitek', 'Ugandan poet, novelist, and social anthropologist who wrote in Acholi and English', '1931-06-07'),
+('Ama Ata Aidoo', 'Ghanaian author, poet, playwright, and academic', '1942-03-23'),
+('Mariama Bâ', 'Senegalese author and feminist who wrote in French', '1929-04-17'),
+('Bessie Head', 'Botswana writer of novels, short stories and autobiographical works', '1937-07-06'),
+('Naguib Mahfouz', 'Egyptian writer who won the 1988 Nobel Prize in Literature', '1911-12-11'),
+('Petina Gappah', 'Zimbabwean lawyer and writer of fiction, essays and opinion pieces', '1971-01-01');
+
+-- Creating user with limited privileges
+CREATE USER 'bookstore_app'@'localhost' IDENTIFIED BY 'Password456!';
+GRANT SELECT, INSERT, UPDATE, DELETE ON bookstore.* TO 'bookstore_app'@'localhost';
 
 
 
